@@ -26,6 +26,8 @@ parser = reqparse.RequestParser()
 parser.add_argument('item', type=str)
 parser.add_argument('city', type=str)
 
+connection = psycopg2.connect(dbname=DB_NAME, password=DB_PASSWORD, host=HOST, user=USER, port=PORT)
+cursor = connection.cursor()
 
 class ItemPriceService(Resource):
     def get(self):
@@ -56,8 +58,7 @@ class ItemPriceService(Resource):
         return price
 
     def query_item_price_db(self, city, item):
-        connection = psycopg2.connect(dbname=DB_NAME, password=DB_PASSWORD, host=HOST, user=USER, port=PORT)
-        cursor = connection.cursor()
+
         if city and item:
             city_clause = " AND city=%s"
             sql_data = (item, city)
