@@ -40,10 +40,10 @@ class ItemPriceService(Resource):
             price = {
                 "status": 200,
                 "content": {
-                    "item": "Furniture",
+                    "item": item,
                     "item_count": item_count,
                     "price_suggestion": mode,
-                    "city": "Philadelphia"
+                    "city": city
                 }
             }
             price_cache.set(price_key, price, timeout=5 * 60)
@@ -82,26 +82,9 @@ class ItemPriceService(Resource):
         mode = mode_results[0]
         return count, mode
 
-
-'''
-id (int): unique id for an item, created by Postgres
-
-title (char): title of the item (e.g. Xbox One)
-
-list_price (int): the price at which the item was listed
-
-sell_price (int): the price at which the item was sold
-
-city (char): the city in which the item was listed
-
-cashless (bool): true / false the seller will accept a credit card payment
-'''
-
-
-
 app = Flask(__name__)
 api = Api(app)
-api.add_resource(ItemPriceService, '/item_price_service')
+api.add_resource(ItemPriceService, '/item-price-service')
 
 if __name__ == '__main__':
     app.run(debug=True)
