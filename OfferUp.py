@@ -18,8 +18,9 @@ While there is some error handling it is minimal and there mostly to prevent the
 
 """
 
-import os
 import logging
+import os
+
 import psycopg2
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
@@ -101,10 +102,10 @@ class ItemPriceService(Resource):
             city_str = city
         price = price_cache.get(price_key)
         if price is None:
-            # First time we've seen this request or it has expired, qurey for it from the db
+            # First time we've seen this request or it has expired, query for it from the db
             item_count, mode = self.query_item_price_db(city, item)
             if item_count == 0:
-                # Special case - this is a valid query but there were no results, so we can't make a price recomendation
+                # Special case - this is a valid query but there were no results, so we can't make a price recommendation
                 return ERROR_RESPONSE
             price = {
                 "status": 200,
@@ -183,6 +184,7 @@ class ItemPriceService(Resource):
             connection.rollback()
             logging.ERROR('DB Programming Error')
             raise e
+
 
 app = Flask(__name__)
 api = Api(app)
