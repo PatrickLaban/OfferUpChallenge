@@ -32,8 +32,12 @@ class ItemPriceService(Resource):
         item = args['item']
         if item is None:
             return ERROR_RESPONSE
-
-        price_key = city + item
+        if city is None:
+            price_key = item
+            city_str = "Not specified"
+        else:
+            price_key = city + item
+            city_str = city
         price = price_cache.get(price_key)
         if price is None:
             item_count, mode = self.query_item_price_db(city, item)
@@ -43,7 +47,7 @@ class ItemPriceService(Resource):
                     "item": item,
                     "item_count": item_count,
                     "price_suggestion": mode,
-                    "city": city
+                    "city": city_str
                 }
             }
             price_cache.set(price_key, price, timeout=5 * 60)
